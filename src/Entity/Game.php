@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\GameRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[UniqueEntity('codeRenc', message: 'le code de la rencontre est déjà utilisé.')]
@@ -17,30 +19,37 @@ class Game
     private ?int $id = null;
 
     #[ORM\Column(length: 10)]
+    #[NotBlank()]
     private ?string $codeRenc = null;
 
     #[ORM\Column(length: 255)]
+    #[NotBlank()]
     private ?string $competition = null;
 
     #[ORM\Column(length: 255)]
+    #[NotBlank()]
     private ?string $poule = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[NotBlank()]
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
+    #[NotBlank()]
     private ?\DateTimeImmutable $heure = null;
 
     #[ORM\Column(length: 255)]
+    #[NotBlank()]
     private ?string $clubADomicile = null;
 
     #[ORM\Column(length: 255)]
+    #[NotBlank()]
     private ?string $clubExterieur = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $scoreADomicile = null;
 
-    #[ORM\Column(type: Types::SMALLINT)]
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $scoreExterieur = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -95,9 +104,9 @@ class Game
         return $this->date;
     }
 
-    public function setDate(\DateTimeImmutable $date): static
+    public function setDate(string $date): static
     {
-        $this->date = $date;
+        $this->date = DateTimeImmutable::createFromFormat("d/m/Y", $date);
 
         return $this;
     }
@@ -107,9 +116,9 @@ class Game
         return $this->heure;
     }
 
-    public function setHeure(\DateTimeImmutable $heure): static
+    public function setHeure(string $heure): static
     {
-        $this->heure = $heure;
+        $this->heure = DateTimeImmutable::createFromFormat("H:i:s", $heure);
 
         return $this;
     }
@@ -186,7 +195,7 @@ class Game
         return $this;
     }
 
-    /**Les fonctions métiers*/
+    /**Les fonctions sur mesure*/
     public function isADomicile(): bool
     {
         return str_contains($this->clubADomicile, "LE LANDREAU HANDBALL") ? true : false;
@@ -197,7 +206,28 @@ class Game
         return $this->scoreADomicile === null;
     }
 
-    public function isASundayGame(Game $compared): bool {
-        return $this->date > $compared->getDate();
+    public function gameWeekDay(): string
+    {
+        switch ($this->getDate()->format('N')) {
+            case 6:
+                return 'saturday';
+            case 7:
+                return 'sunday';
+            default:
+                return 'not on weekend';
+        }
+    }
+
+    public function winner(): string
+    {
+        if ($this->forfait !== null) {
+            return "forfait";
+        } elseif ($this->getScoreADomicile() === $this->getScoreExterieur()) {
+            return "match null";
+        } else {
+            return $this->getScoreADomicile() > $this->getScoreExterieur()
+                ? $this->getClubADomicile()
+                : $this->getClubExterieur();
+        }
     }
 }
