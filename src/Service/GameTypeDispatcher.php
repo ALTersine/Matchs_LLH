@@ -8,6 +8,12 @@ use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 class GameTypeDispatcher
 {
 
+public function __construct(
+    private readonly ContainerBagInterface $container
+)
+{
+}
+
     private const array REQUIRED_COLUMNS = [
         'competition',
         'poule',
@@ -25,40 +31,76 @@ class GameTypeDispatcher
         'Forfait'
     ];
 
-    public function isImportingGamesPreview(string $directory): bool
+    public function processCSVImport(string $directory): array
     {
         $csv = fopen($directory, 'r');
 
-        if(!$csv){
+        if ($csv === false) {
             throw new CsvException('Fichier introuvable, ou impossible à ouvrir', 400);
         }
 
-        try{
-            $header = fgetcsv($csv, separator:';', escape:'');
-            $i = 0;
+        try {
+            $header = fgetcsv($csv, separator: ';', escape: '');
 
-            foreach(self::REQUIRED_COLUMNS as $headerRequired){
-                if(!in_array($headerRequired,$header, true)){
+            //Si le fichier est vide, on renvoie aucun match dans le type
+            if ($header === false) {
+                return ['type' => $this->container->get('app.label.game.absent')];
+            }
+
+            //Vérification qu'il a tout ce qu'il faut à minima pour l'import des preview
+            foreach (self::REQUIRED_COLUMNS as $headerRequired) {
+                if (!in_array($headerRequired, $header, true)) {
                     throw new CsvException('Colonne ' . $headerRequired . ' manquante', 400);
                 }
             }
 
-            foreach(self::RESULTS_COLUMNS as $headerForResultats){
-                if(in_array($headerForResultats, $header, true)){
+            //On compte le nombre de colonne utilisé pour un résultat.
+            $i = 0;
+            foreach (self::RESULTS_COLUMNS as $headerForResultats) {
+                if (in_array($headerForResultats, $header, true)) {
                     ++$i;
                 }
             }
 
-            if($i===0){
-                return true;
-            }elseif ($i === count(self::RESULTS_COLUMNS)){
-                return false;
-            }else {
+            //Si on a trouvé aucune colonne de résultt, c'est un import de preview
+            if ($i === 0) {
+                return $this->gamesData($csv, $header, self::REQUIRED_COLUMNS, $this->container->get('app.label.game.preview'));
+            
+            //Si on a bient toute les colonnes supplémentaires pour un résultat, c'est l'import de result
+            } elseif ($i === count(self::RESULTS_COLUMNS)) {
+                $allColumns = array_merge(self::REQUIRED_COLUMNS, self::RESULTS_COLUMNS);
+                return $this->gamesData($csv, $header, $allColumns, $this->container->get('app.label.game.result'));
+
+            //Si aucun compte n'est correct, on lève une exception
+            } else {
                 throw new CsvException('Erreur au traitement du fichier de résultat.');
             }
-
-        }finally{
+        } finally {
             fclose($csv);
         }
+    }
+
+    private function gamesData($file, array $header, array $neededHeader, string $type): array
+    {
+        $data = [];
+        while (($row = fgetcsv($file, separator: ";", escape: '')) !== false) {
+            $row = array_pad($row, count($header), null);
+            $allData = array_combine($header, $row);
+
+            $data[] = $this->cleanData($allData, $neededHeader);
+        }
+        return [
+            'type' => $type,
+            'games' => $data
+        ];
+    }
+
+    private function cleanData(array $allData, array $neededHeader): array
+    {
+        $data = [];
+        foreach ($neededHeader as $column) {
+            $data[$column] = trim($allData[$column]);
+        }
+        return $data;
     }
 }

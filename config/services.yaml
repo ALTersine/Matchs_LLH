@@ -11,6 +11,10 @@ parameters:
     app.public_import_directory: '%app.data_directory%/uploads/imports'
     app.test_import_directory: '%kernel.project_dir%/src/DataFixtures'
 
+    app.label.game.preview: 'preview'
+    app.label.game.result: 'result'
+    app.label.game.absent: 'weekend_off'
+
 services:
     # default configuration for services in *this* file
     _defaults:
