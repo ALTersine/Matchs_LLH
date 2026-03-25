@@ -46,6 +46,9 @@ class Game
     #[NotBlank()]
     private ?string $clubExterieur = null;
 
+    #[ORM\Column]
+    private ?bool $hosting = null;
+
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $scoreADomicile = null;
 
@@ -58,6 +61,11 @@ class Game
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $etat = null;
 
+    public function __construct()
+    {
+        $this->hosting = false;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -143,6 +151,18 @@ class Game
     public function setClubExterieur(string $clubExterieur): static
     {
         $this->clubExterieur = $clubExterieur;
+
+        return $this;
+    }
+
+    public function isHosting(): ?bool
+    {
+        return $this->hosting;
+    }
+
+    public function setHosting(): static
+    {
+        $this->hosting = $this->isADomicile();
 
         return $this;
     }

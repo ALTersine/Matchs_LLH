@@ -16,9 +16,9 @@ class GameRepository extends ServiceEntityRepository
         parent::__construct($registry, Game::class);
     }
 
-    public function findWithCodeRenc(string $codeRenc): Game
+    public function findWithCodeRenc(string $codeRenc): Game | null
     {
-        return $this->createQueryBuilder(g)
+        return $this->createQueryBuilder('g')
             ->where('g.codeRenc = :code')
             ->setParameter('code', $codeRenc)
             ->getQuery()

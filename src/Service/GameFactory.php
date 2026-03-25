@@ -22,27 +22,27 @@ class GameFactory
     public function createGames(array $files): array
     {
         $anouncment = [];
-        $i = 0;
 
         foreach ($files as $file) {
-            $importResult = $this->serviceCSV->processCSVImport($file);
-            $anouncment[$i]['type'] = $importResult['type'];
+            $games = null;
+            $importResults = $this->serviceCSV->processCSVImport($file);
 
-            switch ($importResult['type']) {
+            switch ($importResults['type']) {
                 case $this->container->get('app.label.game.absent'):
-                    $i++;
                     break;
                 case $this->container->get('app.label.game.preview'):
-                    $this->persistingGames($importResult['games'], $anouncment[$i++]['game'], false);
+                    $games = $this->persistingGames($importResults['games'], false);
                     break;
                 case $this->container->get('app.label.game.result'):
-                    $this->persistingGames($importResult['games'], $anouncment[$i++]['game'], true);
+                    $games = $this->persistingGames($importResults['games'], true);
                     break;
                 default:
                     throw new GameException(
                         'Traitement du type de fichier erroné. Impossible de créer les matchs'
                     );
             }
+
+            $anouncment[] = $games;
         }
         return $anouncment;
     }
@@ -50,8 +50,9 @@ class GameFactory
     /** Fonctions pour créer ou mettre à jour les matchs en base
      *  + Alimente le tableau retrouné avec les codes rencontre des matchs à utiliser dans la création d'image
      */
-    private function persistingGames(array $data, array $toImplement, bool $isAResult): void
+    private function persistingGames(array $data, bool $isAResult): array
     {
+        $toImplement = [];
         foreach ($data as $gameData) {
             $idGame = $gameData['code renc'];
             $game = $this->createGameIfDoesNotExist($idGame);
@@ -70,6 +71,7 @@ class GameFactory
             }
         }
         $this->em->flush();
+        return $toImplement;
     }
 
     /** Fonctions pour factoriser l'idratation des objets Match
@@ -95,12 +97,12 @@ class GameFactory
         $game->setDate($data['le']);
         $game->setHeure($data['horaire']);
 
-        if (str_contains($data['club rec'], 'LE LANDREAU HANDBALL')) {
+        if (str_contains($data['club rec'], 'LANDREAU')) {
             $game->setClubExterieur($data['club vis']);
             $game->setClubADomicile(
                 $this->serviceTeam->getTeamName($data['competition'], $data['poule'])
             );
-        } elseif (str_contains($data['club vis'], 'LE LANDREAU HANDBALL')) {
+        } elseif (str_contains($data['club vis'], 'LANDREAU')) {
             $game->setClubExterieur(
                 $this->serviceTeam->getTeamName($data['competition'], $data['poule'])
             );
@@ -109,12 +111,14 @@ class GameFactory
             $game->setClubExterieur($data['club vis']);
             $game->setClubADomicile($data['club rec']);
         }
+
+        $game->setHosting();
     }
 
     private function settingGameResultsData(array $data, Game $game): void
     {
-        $game->setScoreADomicile($data['sc rec']);
-        $game->setScoreExterieur($data['sc vis']);
+        $game->setScoreADomicile((int)$data['sc rec']);
+        $game->setScoreExterieur((int)$data['sc vis']);
         $game->setEtat($data['Etat']);
         $game->setForfait($data['Forfait']);
     }
