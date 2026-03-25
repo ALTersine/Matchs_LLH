@@ -12,7 +12,7 @@ class FindTeam
         private readonly TeamRepository $repo
     ) {}
 
-    public function getTeamsName(string $competition, string $poule): string
+    public function getTeamName(string $competition, string $poule): string
     {
         $teamFromCompetition = $this->repo->findBy(['codeCompetition' => $competition]);
         if (count($teamFromCompetition) === 0 || !$teamFromCompetition) {

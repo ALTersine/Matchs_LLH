@@ -19,13 +19,13 @@ class TeamTest extends KernelTestCase
 
     public function testFindTeamFromCompetition(): void
     {
-        $team = $this->service->getTeamsName('u12m-44', 'abc');
+        $team = $this->service->getTeamName('u12m-44', 'abc');
         $this->assertEquals('U12 Masculins', $team,);
     }
 
     public function testFindTeamFromPoule(): void
     {
-        $team = $this->service->getTeamsName('u15f-44', 'U15F D2');
+        $team = $this->service->getTeamName('u15f-44', 'U15F D2');
         $this->assertEquals('U15 Féminins - Honneur A', $team,);
     }
 }
