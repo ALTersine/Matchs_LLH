@@ -53,6 +53,8 @@ class GameFactory
     private function persistingGames(array $data, bool $isAResult): array
     {
         $toImplement = [];
+        $toImplement['isResult'] = $isAResult;
+
         foreach ($data as $gameData) {
             $idGame = $gameData['code renc'];
             $game = $this->createGameIfDoesNotExist($idGame);

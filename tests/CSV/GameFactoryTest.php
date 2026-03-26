@@ -82,6 +82,7 @@ class GameFactoryTest extends KernelTestCase
         $fileTested[] = $this->getCsv('result.csv');
 
         $resultat = $this->service->createGames($fileTested);
+        var_dump($resultat);
 
         $this->assertNotNull($resultat[0], 'Premier fichier à renvoyer un null');
         $this->assertNotEmpty($resultat[0], 'Premier fichier n\'a rien renvoyé');

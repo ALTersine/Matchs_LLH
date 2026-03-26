@@ -13,6 +13,7 @@ parameters:
 
     app.public_img: '%app.data_directory%/public/images'
     app.public_font: '%app.data_directory%/public/font'
+    app.public_announcement_img: '%app.data_directory%/public/output'
 
     app.label.game.preview: 'preview'
     app.label.game.result: 'result'

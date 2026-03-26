@@ -24,4 +24,15 @@ class GameRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllCodeRencsOrdered(array $codes): array
+    {
+        return $this->createQueryBuilder('g')
+            ->where('g.codeRenc IN (:code)')
+            ->setParameter('code', $codes)
+            ->orderBy('g.date', 'ASC')
+            ->addOrderBy('g.heure', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

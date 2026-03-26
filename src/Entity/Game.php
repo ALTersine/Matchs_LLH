@@ -109,7 +109,7 @@ class Game
 
     public function getDate(): ?\DateTimeImmutable
     {
-        return $this->date?->format("d/m/Y");
+        return $this->date;
     }
 
     public function setDate(string $date): static
@@ -121,7 +121,7 @@ class Game
 
     public function getHeure(): ?\DateTimeImmutable
     {
-        return $this->heure?->format("d/m/Y");
+        return $this->heure;
     }
 
     public function setHeure(string $heure): static
@@ -133,7 +133,7 @@ class Game
 
     public function getClubADomicile(): ?string
     {
-        return $this->clubADomicile?->format("H:i");
+        return $this->clubADomicile;
     }
 
     public function setClubADomicile(string $clubADomicile): static
@@ -213,6 +213,23 @@ class Game
         $this->etat = $etat;
 
         return $this;
+    }
+
+    /**Getter en format de display (string) */
+    public function displayDate() : string {
+        return $this->date?->format("d/m/Y");
+    }
+
+    public function displayHour() : string {
+        return $this->heure?->format("d/m/Y");
+    }
+
+    public function displayScoreVis() :string {
+        return ((string) $this->scoreExterieur);
+    }
+
+    public function displayScoreRec() :string {
+        return ((string) $this->scoreADomicile);
     }
 
     /**Les fonctions sur mesure*/

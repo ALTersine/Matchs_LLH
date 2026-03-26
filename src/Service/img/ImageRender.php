@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\img;
+namespace App\Service\Img;
 
 use App\Entity\Game;
 use Exception;
@@ -16,12 +16,10 @@ class ImageRender
     private const int SAT_HEADER_X    = 826;
     private const int SAT_HEADER_Y    = 275;
     private const int SAT_FIRST_ROW_Y = 364;
-    private const int SAT_MAX_ROWS    = 9;
 
     private const int SUN_HEADER_X    = 826;
     private const int SUN_HEADER_Y    = 756;
     private const int SUN_FIRST_ROW_Y = 830;
-    private const int SUN_MAX_ROWS    = 5;
 
     private const int COL1_CENTER_X = 87;
     private const int COL2_START_X  = 130;
@@ -103,7 +101,7 @@ class ImageRender
         $this->drawGameInfoInRow($canvas, 2, $clubRec, $y);
 
         //horaire du match
-        $horaire = (string) $game->getHeure();
+        $horaire = $game->displayHour();
         $this->drawGameInfoInRow($canvas, 3, $horaire, $y, true);
 
         //Info club extérieur ou club visiteur
@@ -213,7 +211,7 @@ class ImageRender
     //Util Score
     private function formatScore(Game $game): string
     {
-        return ((string)$game->getScoreADomicile()) . ' - ' . ((string)$game->getScoreExterieur());
+        return $game->displayScoreRec() . ' - ' . $game->displayScoreVis();
     }
 
     //Utils Nom d'équipe et Truncate
