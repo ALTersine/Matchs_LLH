@@ -109,7 +109,7 @@ class Game
 
     public function getDate(): ?\DateTimeImmutable
     {
-        return $this->date;
+        return $this->date?->format("d/m/Y");
     }
 
     public function setDate(string $date): static
@@ -121,7 +121,7 @@ class Game
 
     public function getHeure(): ?\DateTimeImmutable
     {
-        return $this->heure;
+        return $this->heure?->format("d/m/Y");
     }
 
     public function setHeure(string $heure): static
@@ -133,7 +133,7 @@ class Game
 
     public function getClubADomicile(): ?string
     {
-        return $this->clubADomicile;
+        return $this->clubADomicile?->format("H:i");
     }
 
     public function setClubADomicile(string $clubADomicile): static
