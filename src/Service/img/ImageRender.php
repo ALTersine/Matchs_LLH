@@ -9,25 +9,25 @@ use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 class ImageRender
 {
-    private const int ROW_HEIGHT    = 100;
+    private const int ROW_HEIGHT    = 50;
     private const int ROW_START_X   = 87;
     private const int ROW_END_X     = 962;
 
-    private const int SAT_HEADER_X    = 826;
-    private const int SAT_HEADER_Y    = 275;
-    private const int SAT_FIRST_ROW_Y = 364;
+    private const int SAT_HEADER_X    = 926;
+    private const int SAT_HEADER_Y    = 255;
+    private const int SAT_FIRST_ROW_Y = 314;
 
-    private const int SUN_HEADER_X    = 826;
-    private const int SUN_HEADER_Y    = 756;
-    private const int SUN_FIRST_ROW_Y = 830;
+    private const int SUN_HEADER_X    = 926;
+    private const int SUN_HEADER_Y    = 750;
+    private const int SUN_FIRST_ROW_Y = 810;
 
-    private const int COL1_CENTER_X = 87;
-    private const int COL2_START_X  = 130;
-    private const int COL2_END_X    = 509;
-    private const int COL3_START_X  = 510;
-    private const int COL3_END_X    = 589;
-    private const int COL4_START_X  = 590;
-    private const int COL4_END_X    = 962;
+    private const int COL1_CENTER_X = 107;
+    private const int COL2_START_X  = 135;
+    private const int COL2_END_X    = 514;
+    private const int COL3_START_X  = 520;
+    private const int COL3_END_X    = 604;
+    private const int COL4_START_X  = 610;
+    private const int COL4_END_X    = 968;
 
     private const int FONT_SIZE     = 16;
     private const int ICON_SIZE     = 45;
@@ -232,9 +232,12 @@ class ImageRender
             return $name;
         }
 
-        while (mb_strlen($name) > 0) {
-            $name = mb_substr($name, 0, mb_strlen($name) - 1);
-            $truncated = $name . '...';
+        $nameToLower = mb_convert_case($name,2);
+        $nameToLower = str_replace('Handball', 'hb' , $nameToLower);
+
+        while (mb_strlen($nameToLower) > 0) {
+            $nameToLower = mb_substr($nameToLower, 0, mb_strlen($nameToLower) - 1);
+            $truncated = $nameToLower . '...';
             $bbox = imagettfbbox(self::FONT_SIZE, 0, $this->font, $truncated);
 
             if (abs($bbox[4] - $bbox[0]) <= $maxW) {

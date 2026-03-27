@@ -160,9 +160,9 @@ class Game
         return $this->hosting;
     }
 
-    public function setHosting(): static
+    public function setHosting(string $clubRec): static
     {
-        $this->hosting = $this->isADomicile();
+        $this->hosting = $this->isADomicile($clubRec);
 
         return $this;
     }
@@ -221,7 +221,7 @@ class Game
     }
 
     public function displayHour() : string {
-        return $this->heure?->format("d/m/Y");
+        return $this->heure?->format("H:i");
     }
 
     public function displayScoreVis() :string {
@@ -233,9 +233,9 @@ class Game
     }
 
     /**Les fonctions sur mesure*/
-    public function isADomicile(): bool
+    public function isADomicile(string $club): bool
     {
-        return str_contains($this->clubADomicile, "LE LANDREAU HANDBALL") ? true : false;
+        return str_contains($club, "LANDREAU") ? true : false;
     }
 
     public function isGamePreview(): bool
@@ -257,7 +257,7 @@ class Game
 
     public function winner(): string
     {
-        if ($this->forfait !== null) {
+        if ($this->forfait !== "") {
             return "forfait";
         } elseif ($this->getScoreADomicile() === $this->getScoreExterieur()) {
             return "match null";

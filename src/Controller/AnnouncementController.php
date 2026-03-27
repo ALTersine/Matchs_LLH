@@ -109,10 +109,13 @@ final class AnnouncementController extends AbstractController
         try {
             $images = [];
             $imgUrls = [];
+
             $announcements = $this->serviceGame->createGames($gamesOnHold);
+
             foreach ($announcements as $announce) {
-                $isResult = $announce[0];
+                $isResult = $announce['isResult'];
                 $codes = array_slice($announce, 1);
+                
                 $images = array_merge($images, $this->serviceImage->createAnnouncments($codes, $isResult));
             }
 

@@ -97,6 +97,7 @@ class GameFactory
         $game->setPoule($data['poule']);
         $game->setDate($data['le']);
         $game->setHeure($data['horaire']);
+        $game->setHosting($data['club_rec']);
 
         if (str_contains($data['club_rec'], 'LANDREAU')) {
             $game->setClubExterieur($data['club_vis']);
@@ -112,8 +113,6 @@ class GameFactory
             $game->setClubExterieur($data['club_vis']);
             $game->setClubADomicile($data['club_rec']);
         }
-
-        $game->setHosting();
     }
 
     private function settingGameResultsData(array $data, Game $game): void
