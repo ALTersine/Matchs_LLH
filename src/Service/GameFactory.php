@@ -25,16 +25,15 @@ class GameFactory
 
         foreach ($files as $file) {
             $games = null;
-            $importResults = $this->serviceCSV->processCSVImport($file);
 
-            switch ($importResults['type']) {
+            switch ($file['type']) {
                 case $this->container->get('app.label.game.absent'):
                     break;
                 case $this->container->get('app.label.game.preview'):
-                    $games = $this->persistingGames($importResults['games'], false);
+                    $games = $this->persistingGames($file['games'], false);
                     break;
                 case $this->container->get('app.label.game.result'):
-                    $games = $this->persistingGames($importResults['games'], true);
+                    $games = $this->persistingGames($file['games'], true);
                     break;
                 default:
                     throw new GameException(
@@ -56,7 +55,7 @@ class GameFactory
         $toImplement['isResult'] = $isAResult;
 
         foreach ($data as $gameData) {
-            $idGame = $gameData['code renc'];
+            $idGame = $gameData['code_renc'];
             $game = $this->createGameIfDoesNotExist($idGame);
 
             try {
@@ -99,19 +98,19 @@ class GameFactory
         $game->setDate($data['le']);
         $game->setHeure($data['horaire']);
 
-        if (str_contains($data['club rec'], 'LANDREAU')) {
-            $game->setClubExterieur($data['club vis']);
+        if (str_contains($data['club_rec'], 'LANDREAU')) {
+            $game->setClubExterieur($data['club_vis']);
             $game->setClubADomicile(
                 $this->serviceTeam->getTeamName($data['competition'], $data['poule'])
             );
-        } elseif (str_contains($data['club vis'], 'LANDREAU')) {
+        } elseif (str_contains($data['club_vis'], 'LANDREAU')) {
             $game->setClubExterieur(
                 $this->serviceTeam->getTeamName($data['competition'], $data['poule'])
             );
-            $game->setClubADomicile($data['club rec']);
+            $game->setClubADomicile($data['club_rec']);
         } else {
-            $game->setClubExterieur($data['club vis']);
-            $game->setClubADomicile($data['club rec']);
+            $game->setClubExterieur($data['club_vis']);
+            $game->setClubADomicile($data['club_rec']);
         }
 
         $game->setHosting();
@@ -119,8 +118,8 @@ class GameFactory
 
     private function settingGameResultsData(array $data, Game $game): void
     {
-        $game->setScoreADomicile((int)$data['sc rec']);
-        $game->setScoreExterieur((int)$data['sc vis']);
+        $game->setScoreADomicile((int)$data['sc_rec']);
+        $game->setScoreExterieur((int)$data['sc_vis']);
         $game->setEtat($data['Etat']);
         $game->setForfait($data['Forfait']);
     }

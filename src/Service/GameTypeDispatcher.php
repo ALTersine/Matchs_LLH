@@ -30,6 +30,7 @@ public function __construct(
         'Etat',
         'Forfait'
     ];
+    
 
     public function processCSVImport(string $directory): array
     {
@@ -83,11 +84,15 @@ public function __construct(
     private function gamesData($file, array $header, array $neededHeader, string $type): array
     {
         $data = [];
+        //Retirer les espaces dans les nom de colonnes
+        $cleanHeader = $this->cleanHeader($header);
+        $cleanHeaderNeeded = $this->cleanHeader($neededHeader);
+
         while (($row = fgetcsv($file, separator: ";", escape: '')) !== false) {
             $row = array_pad($row, count($header), null);
-            $allData = array_combine($header, $row);
+            $allData = array_combine($cleanHeader, $row);
 
-            $data[] = $this->cleanData($allData, $neededHeader);
+            $data[] = $this->cleanData($allData, $cleanHeaderNeeded);
         }
         return [
             'type' => $type,
@@ -102,5 +107,13 @@ public function __construct(
             $data[$column] = trim($allData[$column]);
         }
         return $data;
+    }
+
+    private function cleanHeader(array $header) :array{
+        $cleanHeader = [];
+        foreach($header as $name){
+            $cleanHeader[] = str_replace(' ','_',$name);
+        }
+        return $cleanHeader;
     }
 }

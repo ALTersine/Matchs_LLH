@@ -15,7 +15,8 @@ class ImageGenerator
 
     public function loadBackground(bool $isResult): GdImage {
         $bkground = $isResult ? 'results.png' : 'games.png';
-        $path = $this->container->get('app.public_announcement_img').'/'.$bkground;
+        $path = $this->container->get('app.public_img').'/'.$bkground;
+        
 
         if(!file_exists($path)){
             throw new Exception('Image de fond '.$bkground.' introuvable');

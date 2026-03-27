@@ -9,12 +9,6 @@
                 "enabled": false,
                 "fetch": "eager"
             }
-        },
-        "@symfony/ux-vue": {
-            "vue": {
-                "enabled": true,
-                "fetch": "eager"
-            }
         }
     },
     "entrypoints": []

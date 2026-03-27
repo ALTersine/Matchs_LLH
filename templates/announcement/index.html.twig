@@ -1,20 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AnnouncementController!{% endblock %}
+{% block title %}{{parent()}} - Import des matchs {% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/wamp64/www/Matchs_LLH/src/Controller/AnnouncementController.php</code></li>
-        <li>Your template at <code>C:/wamp64/www/Matchs_LLH/templates/announcement/index.html.twig</code></li>
-    </ul>
+{% block section %}
+<div class="text-center m-5">
+    <h2>Import des résultats</h2>
+    <p>Importez un ou deux fichiers CSV issue de
+        <a href="https://extraction.gesthand.net/index.php?section=competition&type=rencontre&joue=1" target="_blank"
+            class="text-decoration-none mb-2">
+            GESTHAND
+        </a>
+        .
+    </p>
 </div>
+
+<div class="row justify-content-evenly">
+    <div class="col-sm-12 col-md-6">
+        <img src="{{ asset('images/animation.gif') }}" alt="Importation des match"
+            class="img-fluid rounded mx-auto d-block">
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <div class="col-12"></div>
+        <form method="post" action="{{path('app_confirmation')}}" enctype="multipart/form-data">
+
+            <input type="file" name="csv_file_1" id="import1" class="form-control m-1">
+            <input type="file" name="csv_file_2" id="import1" class="form-control m-1">
+            <button type="submit" class="btn btn-success m-2">Importer</button>
+
+        </form>
+    </div>
+</div>
+</div>
+
 {% endblock %}

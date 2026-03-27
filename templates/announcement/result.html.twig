@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{parent()}} - Résultats des matchs {% endblock %}
+
+{% block section %}
+<div class="text-center m-5">
+    <h2>Résultat de l'import</h2>
+    <p>Voici les annonces du weekend :
+    </p>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Images générées</h1>
+    <span class="badge bg-success">{{ imageUrls | length }} image(s)</span>
+</div>
+
+{% if imageUrls is empty %}
+<div class="alert alert-warning">
+    Aucune image n'a été générée.
+</div>
+{% else %}
+<div class="row">
+    {% for url in imageUrls %}
+    <div class="col-md-6 mb-4">
+        <div class="card shadow">
+            <img src="{{ url }}" class="card-img-top img-fluid" alt="Annonce générée {{ loop.index }}">
+            <div class="card-footer">
+                <a href="{{ url }}" download class="btn btn-primary w-100">
+                    ⬇ Télécharger l'image {{ loop.index }}
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="mt-4">
+    <a href="{{ path('app_home') }}" class="btn btn-secondary">
+        Retour à l'import
+    </a>
+</div>
+
+{% endblock %}

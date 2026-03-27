@@ -11,9 +11,9 @@ parameters:
     app.public_import_directory: '%app.data_directory%/uploads/imports'
     app.test_import_directory: '%kernel.project_dir%/src/DataFixtures'
 
-    app.public_img: '%app.data_directory%/public/images'
-    app.public_font: '%app.data_directory%/public/font'
-    app.public_announcement_img: '%app.data_directory%/public/output'
+    app.public_img: '%kernel.project_dir%/public/images'
+    app.public_font: '%kernel.project_dir%/public/font/AlfaSlabOne-Regular.ttf'
+    app.public_announcement_img: '%kernel.project_dir%/public/output'
 
     app.label.game.preview: 'preview'
     app.label.game.result: 'result'

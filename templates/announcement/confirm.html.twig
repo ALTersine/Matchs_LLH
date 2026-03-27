@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{parent()}} - Validation des matchs {% endblock %}
+
+{% block section %}
+<div class="text-center m-5">
+    <h2>Validation de l'import</h2>
+    <p>Valider que les informations ci-dessous sont correctes.
+        <br>
+        Cliquez sur Annuler pour refaire un autre import. Cliquez sur Valider pour générer les annonces.
+    </p>
+</div>
+
+<div class="row justify-content-evenly">
+    {% for file in data %}
+    {% set type = file.type %}
+    {% set games = file.games %}
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr colspan="5">
+                {% if type === 'result' %}
+                <th>Résultat(s)</th>
+                {% else %}
+                <th>Match(s) du weekend</th>
+                {% endif %}
+            </tr>
+            <tr>
+                <th>Code</th>
+                <th>Date</th>
+                <th>Club à domicile</th>
+                {% if type === "result" %}
+                <th>Score</th>
+                {% else %}
+                <th>heure</th>
+                {% endif %}
+                <th>Club à l'extérieur</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for game in games %}
+            <tr>
+                <td>{{ game.code_renc }}</td>
+                <td>{{ game.le }}</td>
+                <td>{{ game.club_rec }}</td>
+                {% if type === "result" %}
+                {% if game.Etat === "JOUER" %}
+                <td>{{game.sc_rec}} - {{game.sc_vis}}</td>
+                {% else %}
+                <td>{{ game.Forfait ? 'Forfait' : 'Aucun résultat' }}</td>
+                {% endif %}
+                {% else %}
+                <td>{{ game.horaire }}</td>
+                {% endif %}
+                <td>{{ game.club_vis }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+
+    <div class="row justify-content-evenly">
+        <div class="col-2 d-flex justify-content-center">
+        <a href="{{path('app_generate')}}" class="text-decoration-none">
+        <button type="button"  class="btn btn-success">Valider</button>
+        </a>
+    </div>
+    <div class="col-2 d-flex justify-content-center">
+    <a href="{{path('app_home')}}" class="text-decoration-none"></a>
+        <button type="button" class="btn btn-secondary">Annuler</button>
+    </a>
+    </div>
+</div>
+</div>
+
+{% endblock %}

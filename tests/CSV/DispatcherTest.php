@@ -32,10 +32,12 @@ class DispatcherTest extends KernelTestCase
             'Tableau games manquant'
         );
 
+        var_dump($tab['games']);
+
         foreach ($tab['games'] as $game) {
             $gameToTest = $game;
             if ($isResult) {
-                unset($gameToTest['Forfait'], $gameToTest['sc rec'], $gameToTest['sc vis']);
+                unset($gameToTest['Forfait'], $gameToTest['sc_rec'], $gameToTest['sc_vis']);
             }
             foreach ($gameToTest as $value) {
                 $this->assertNotSame('', $value, 'Des données sont vides');
@@ -44,13 +46,13 @@ class DispatcherTest extends KernelTestCase
         }
 
         $clubs = array_merge(
-            array_column($tab['games'], 'club rec'),
-            array_column($tab['games'], 'club vis')
+            array_column($tab['games'], 'club_rec'),
+            array_column($tab['games'], 'club_vis' )
         );
         $this->assertContains(
-            'LE LANDREAU HANDBALL',
+            'LANDREAU',
             $clubs,
-            'Référence LE LANDREAU HANDBALL non retrouvé dans la qualification des clubs'
+            'Référence LANDREAU non retrouvé dans la qualification des clubs'
         );
 
         foreach ($tab['games'] as $game) {

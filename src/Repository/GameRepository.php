@@ -33,6 +33,6 @@ class GameRepository extends ServiceEntityRepository
             ->orderBy('g.date', 'ASC')
             ->addOrderBy('g.heure', 'ASC')
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 }

@@ -14,15 +14,12 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class AnnouncementController extends AbstractController
 {
-    private string $csvDir = '';
 
     public function __construct(
         private readonly GameTypeDispatcher $csvDispatcher,
         private readonly GameFactory $serviceGame,
         private readonly ImageFactory $serviceImage
-    ) {
-        $this->csvDir = $this->getParameter('app.public_import_directory');
-    }
+    ) {}
 
     #[Route('/', name: 'app_home', methods: ['GET'])]
     public function index(
@@ -58,7 +55,7 @@ final class AnnouncementController extends AbstractController
         foreach ($uploadedFiles as $file) {
             $fileExtension = $file->getClientOriginalExtension();
             $fileCompleteName = $file->getClientOriginalName() . uniqid('_') . '.' . $fileExtension;
-            $filePath = $this->csvDir . '/' . $fileCompleteName;
+            $filePath = $this->getParameter('app.public_import_directory') . '/' . $fileCompleteName;
 
             if ($fileExtension !== 'csv') {
                 $this->addFlash('danger', 'Le fichier ' . $file->getClientOriginalName() . ' n\'est pas un CSV');
@@ -66,7 +63,7 @@ final class AnnouncementController extends AbstractController
             }
 
             try {
-                $file->move($this->csvDir, $fileCompleteName);
+                $file->move($this->getParameter('app.public_import_directory'), $fileCompleteName);
                 $gamesOnHold[] = $this->csvDispatcher->processCSVImport($filePath);
             } catch (CsvException $e) {
                 $this->addFlash('danger', 'Une erreur s\'est produite au traitement des fichiers : ' . $e->getMessage());
@@ -80,12 +77,26 @@ final class AnnouncementController extends AbstractController
 
         $req->getSession()->set('toConfirm', $gamesOnHold);
 
+        return $this->redirectToRoute('app_confirmation_get');
+    }
+
+    #[Route('/confirm', name: 'app_confirmation_get', methods: ['GET'])]
+    public function confirmView(
+        Request $req
+    ): Response {
+        $toConfirm = $req->getSession()->get('toConfirm');
+
+        if (empty($toConfirm)) {
+            $this->addFlash('danger', 'Session expirée, veuillez retransmettre les fichiers d\'import.');
+            return $this->redirectToRoute('app_home');
+        }
+
         return $this->render('announcement/confirm.html.twig', [
-            'confirmation' => $gamesOnHold
+            'data' => $toConfirm,
         ]);
     }
 
-    #[Route('/generate', name: 'app_generate', methods: ['POST'])]
+    #[Route('/generate', name: 'app_generate', methods: ['GET','POST'])]
     public function generator(
         Request $req
     ): Response {
