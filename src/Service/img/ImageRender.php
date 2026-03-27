@@ -10,8 +10,6 @@ use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 class ImageRender
 {
     private const int ROW_HEIGHT    = 50;
-    private const int ROW_START_X   = 87;
-    private const int ROW_END_X     = 962;
 
     private const int SAT_HEADER_X    = 926;
     private const int SAT_HEADER_Y    = 255;

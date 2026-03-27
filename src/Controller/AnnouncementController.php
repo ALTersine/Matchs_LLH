@@ -6,6 +6,8 @@ use App\Exception\CsvException;
 use App\Service\GameFactory;
 use App\Service\GameTypeDispatcher;
 use App\Service\Img\ImageFactory;
+use App\Service\SocialMediaOutLines;
+use DateTimeImmutable;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,7 +100,8 @@ final class AnnouncementController extends AbstractController
 
     #[Route('/generate', name: 'app_generate', methods: ['GET','POST'])]
     public function generator(
-        Request $req
+        Request $req,
+        SocialMediaOutLines $serviRS
     ): Response {
         $gamesOnHold = $req->getSession()->get('toConfirm');
         if (empty($gamesOnHold)) {
@@ -134,7 +137,9 @@ final class AnnouncementController extends AbstractController
         }
 
         return $this->render('announcement/result.html.twig', [
-            'imageUrls' => $imgUrls
+            'imageUrls' => $imgUrls,
+            'LinePreview' => $serviRS->outLinesForPreview(),
+            'LineResult' =>$serviRS->outLinesForResults()
         ]);
     }
 }
