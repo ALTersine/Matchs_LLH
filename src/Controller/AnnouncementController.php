@@ -76,7 +76,6 @@ final class AnnouncementController extends AbstractController
                 }
             }
         }
-
         $req->getSession()->set('toConfirm', $gamesOnHold);
 
         return $this->redirectToRoute('app_confirmation_get');
@@ -116,10 +115,12 @@ final class AnnouncementController extends AbstractController
             $announcements = $this->serviceGame->createGames($gamesOnHold);
 
             foreach ($announcements as $announce) {
-                $isResult = $announce['isResult'];
-                $codes = array_slice($announce, 1);
+                if($announce){
+                    $isResult = $announce['isResult'];
+                    $codes = array_slice($announce, 1);
                 
-                $images = array_merge($images, $this->serviceImage->createAnnouncments($codes, $isResult));
+                    $images = array_merge($images, $this->serviceImage->createAnnouncments($codes, $isResult));
+                }
             }
 
             $req->getSession()->remove('toConfirm');

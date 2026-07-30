@@ -260,9 +260,7 @@ class Game
 
     public function winner(): string
     {
-        if ($this->forfait) {
-            return "Forfait ".strtolower($this->forfait);
-        } elseif ($this->getScoreADomicile() === $this->getScoreExterieur()) {
+        if ($this->getScoreADomicile() === $this->getScoreExterieur()) {
             return "match null";
         } else {
             return $this->getScoreADomicile() > $this->getScoreExterieur()

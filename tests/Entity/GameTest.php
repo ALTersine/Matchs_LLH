@@ -153,11 +153,6 @@ class GameTest extends KernelTestCase
             )
         );
 
-        $this->assertTrue(
-            str_contains(
-                $this->gettingTesteur(self::CODE4)->winner(),
-                "Forfait"
-            )
-        );
+        $this->assertNotNull($this->gettingTesteur(self::CODE4)->getForfait());
     }
 }

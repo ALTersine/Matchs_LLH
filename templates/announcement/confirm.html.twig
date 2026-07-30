@@ -7,14 +7,27 @@
     <h2>Validation de l'import</h2>
     <p>Valider que les informations ci-dessous sont correctes.
         <br>
-        Cliquez sur Annuler pour refaire un autre import. Cliquez sur Valider pour générer les annonces.
+        S'il y a bien des matchs à publier, cliquez sur Annuler pour refaire un autre import ou Valider pour générer les annonces.
     </p>
 </div>
 
 <div class="row justify-content-evenly">
     {% for file in data %}
     {% set type = file.type %}
-    {% set games = file.games %}
+
+    {% if type === 'weekend_off' %}
+    <div class="row justify-content-evenly mb-3">
+        <div class="d-flex justify-content-center">
+            <h3> Weekend sans match. </h3>
+        </div>
+        <div class="d-flex justify-content-center">
+            <a href="{{path('app_home')}}" class="text-decoration-none">
+            <button type="button" class="btn btn-secondary">Retour</button>
+            </a>
+        </div>
+    </div>
+
+    {% else %}
     <table class="table table-bordered table-striped table-hover">
         <thead>
             <tr>
@@ -41,7 +54,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for game in games %}
+            {% for game in file.games %}
             <tr>
                 <td>{{ game.code_renc }}</td>
                 <td>{{ game.le }}</td>
@@ -62,7 +75,6 @@
             {% endfor %}
         </tbody>
     </table>
-    {% endfor %}
 
     <div class="row justify-content-evenly">
         <div class="col-2 d-flex justify-content-center">
@@ -76,6 +88,8 @@
             </a>
         </div>
     </div>
+    {% endif %}
+    {% endfor %}
 </div>
 
 {% endblock %}

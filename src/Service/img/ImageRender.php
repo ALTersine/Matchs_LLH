@@ -117,26 +117,16 @@ class ImageRender
         $clubRec = $this->clubName($game, isRec: true);
         $clubVis = $this->clubName($game, isRec: false);
 
-        switch ($winner) {
-            case 'forfait':
-                $this->drawGameInfoInRow($canvas, 2, $clubRec, $y);
-                $this->drawGameInfoInRow($canvas, 3, $winner, $y, true);
-                $this->drawGameInfoInRow($canvas, 4, $clubVis, $y);
-                break;
-
-            case 'match null':
-                $this->drawGameInfoInRow($canvas, 2, $clubRec, $y);
-                $score = $this->formatScore($game);
-                $this->drawGameInfoInRow($canvas, 3, $score, $y, true);
-                $this->drawGameInfoInRow($canvas, 4, $clubVis, $y);
-                break;
-
-            default:
-                $this->drawGameInfoInRow($canvas, 2, $clubRec, $y, $winner === $game->getClubADomicile());
-                $score = $this->formatScore($game);
-                $this->drawGameInfoInRow($canvas, 3, $score, $y, true);
-                $this->drawGameInfoInRow($canvas, 4, $clubVis, $y, $winner === $game->getClubExterieur());
-                break;
+        if ($winner === 'match null') {
+            $this->drawGameInfoInRow($canvas, 2, $clubRec, $y);
+            $score = $this->formatScore($game);
+            $this->drawGameInfoInRow($canvas, 3, $score, $y, true);
+            $this->drawGameInfoInRow($canvas, 4, $clubVis, $y);
+        }else{
+            $this->drawGameInfoInRow($canvas, 2, $clubRec, $y, $winner === $game->getClubADomicile());
+            $score = $this->formatScore($game);
+            $this->drawGameInfoInRow($canvas, 3, $score, $y, true);
+            $this->drawGameInfoInRow($canvas, 4, $clubVis, $y, $winner === $game->getClubExterieur());
         }
     }
 
@@ -209,7 +199,7 @@ class ImageRender
     //Util Score
     private function formatScore(Game $game): string
     {
-        return $game->displayScoreRec() . ' - ' . $game->displayScoreVis();
+        return $game->getForfait() ? 'Forfait' : $game->displayScoreRec() . ' - ' . $game->displayScoreVis();
     }
 
     //Utils Nom d'équipe et Truncate
