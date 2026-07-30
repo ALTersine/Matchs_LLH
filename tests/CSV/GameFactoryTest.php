@@ -56,9 +56,9 @@ class GameFactoryTest extends KernelTestCase
         );
     }
 
-    private function getCsv(string $name): string
+    private function getCsv(string $name): array
     {
-        return $this->container->get('app.test_import_directory') . '/' . $name;
+        return $this->serviceCSV->processCSVImport($this->container->get('app.test_import_directory') . '/' . $name);
     }
 
     public function testNoGame(): void
@@ -82,7 +82,6 @@ class GameFactoryTest extends KernelTestCase
         $fileTested[] = $this->getCsv('result.csv');
 
         $resultat = $this->service->createGames($fileTested);
-        var_dump($resultat);
 
         $this->assertNotNull($resultat[0], 'Premier fichier à renvoyer un null');
         $this->assertNotEmpty($resultat[0], 'Premier fichier n\'a rien renvoyé');

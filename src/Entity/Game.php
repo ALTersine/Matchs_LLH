@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNull;
+
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[UniqueEntity('codeRenc', message: 'le code de la rencontre est déjà utilisé.')]
 class Game
@@ -257,8 +260,8 @@ class Game
 
     public function winner(): string
     {
-        if ($this->forfait !== "") {
-            return "forfait";
+        if ($this->forfait) {
+            return "Forfait ".strtolower($this->forfait);
         } elseif ($this->getScoreADomicile() === $this->getScoreExterieur()) {
             return "match null";
         } else {

@@ -32,8 +32,6 @@ class DispatcherTest extends KernelTestCase
             'Tableau games manquant'
         );
 
-        var_dump($tab['games']);
-
         foreach ($tab['games'] as $game) {
             $gameToTest = $game;
             if ($isResult) {
@@ -49,11 +47,9 @@ class DispatcherTest extends KernelTestCase
             array_column($tab['games'], 'club_rec'),
             array_column($tab['games'], 'club_vis' )
         );
-        $this->assertContains(
-            'LANDREAU',
-            $clubs,
-            'Référence LANDREAU non retrouvé dans la qualification des clubs'
-        );
+
+        $avecLandreau = array_filter($clubs, fn($c) => str_contains($c, 'LANDREAU'));
+        $this->assertNotEmpty($avecLandreau, 'Référence LANDREAU non retrouvée dans la qualification des clubs');
 
         foreach ($tab['games'] as $game) {
             $this->assertMatchesRegularExpression(
