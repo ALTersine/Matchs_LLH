@@ -16,8 +16,8 @@ class ImageRender
     private const int SAT_FIRST_ROW_Y = 314;
 
     private const int SUN_HEADER_X    = 926;
-    private const int SUN_HEADER_Y    = 750;
-    private const int SUN_FIRST_ROW_Y = 810;
+    private const int SUN_HEADER_Y    = 800;
+    private const int SUN_FIRST_ROW_Y = 860;
 
     private const int COL1_CENTER_X = 107;
     private const int COL2_START_X  = 135;

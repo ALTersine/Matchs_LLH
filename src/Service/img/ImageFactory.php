@@ -7,8 +7,8 @@ use Exception;
 
 class ImageFactory
 {
-    private const int SAT_MAX_ROWS = 9;
-    private const int SUN_MAX_ROWS = 5;
+    private const int SAT_MAX_ROWS = 10;
+    private const int SUN_MAX_ROWS = 4;
 
     public function __construct(
         private readonly GameRepository $repo,
