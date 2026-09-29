@@ -43,7 +43,10 @@ class GameFactoryTest extends KernelTestCase
         self::bootKernel();
         $this->container = static::getContainer()->get(ContainerBagInterface::class);
         $this->serviceCSV = new GameTypeDispatcher($this->container);
-        $this->serviceTeam = new FindTeam(static::getContainer()->get(TeamRepository::class));
+        $this->serviceTeam = new FindTeam(
+            static::getContainer()->get(TeamRepository::class),
+            static::getContainer()->get(EntityManagerInterface::class)
+        );
         $this->repo = static::getContainer()->get(GameRepository::class);
         $this->em = static::getContainer()->get(EntityManagerInterface::class);
 

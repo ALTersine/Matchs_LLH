@@ -109,7 +109,8 @@ class ImageRender
 
     private function drawGameResult(GdImage $canvas, int $y, Game $game) :void
     {
-        if ($game->getEtat() !== 'JOUE') {
+        //Un forfait n'a pas l'état JOUE mais doit tout de même être affiché
+        if ($game->getEtat() !== 'JOUE' && !$game->getForfait()) {
             return;
         }
 
